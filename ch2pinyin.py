@@ -21,6 +21,8 @@ def list_all(dir_name):
         for filename in filenames:
             res = pinyin_converter.get_pinyin(filename, '_')
             res = res.replace('-', '')
+            res = res.replace(' ','_')
+            res = res.lower()
             if res[-5] == '_':
                 res = res[:-5] + res[-4:]
             src_path = dirpath + '\\' + filename
