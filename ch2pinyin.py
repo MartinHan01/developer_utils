@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
+# -*- coding:utf-8 -*-
 
 
 """
@@ -20,8 +20,8 @@ def list_all(dir_name):
     for dirpath, dirnames, filenames in os.walk(dir_name):
         for filename in filenames:
             res = pinyin_converter.get_pinyin(filename, '_')
-            res = res.replace('-', '')
-            res = res.replace(' ','_')
+            res = remove_chars(res, '-', '(', ')', '（', '）')
+            res = res.replace(' ', '_')
             res = res.lower()
             if res[-5] == '_':
                 res = res[:-5] + res[-4:]
@@ -30,6 +30,11 @@ def list_all(dir_name):
             print(src_path + '->' + res)
             os.rename(src_path, dest_path)
 
+
+def remove_chars(filename, *chars):
+    for i in range(len(chars)):
+        filename = filename.replace(chars[i], '')
+    return filename
 
 if __name__ == '__main__':
     print(sys.argv)
