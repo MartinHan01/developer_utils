@@ -38,7 +38,7 @@ def remove_chars(filename, *chars):
 
 if __name__ == '__main__':
     print(sys.argv)
-    if sys.argv == 1:
+    if len(sys.argv) == 1:
         print('must has name dir')
         exit(-1)
     for dir_name in sys.argv[1:]:
