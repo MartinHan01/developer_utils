@@ -37,12 +37,15 @@ if __name__ == '__main__':
             find = re.findall(pattern ,line)
             if find:
                 var_name = find[len(find) - 1]
-                finds_res.append('%s = findViewById(%s)' % (var_name ,resid))
+                finds_res.append('%s = findViewById(%s);' % (var_name ,resid))
                 declarations.append(line)
 
+
     print()
+    print('private void initView() {')
     for line in finds_res:
-        print(line)
+        print('    %s' % line)
+    print('}')
     print()
 
     for line in declarations:
