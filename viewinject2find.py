@@ -44,5 +44,6 @@ if __name__ == '__main__':
     for line in finds_res:
         print(line)
     print()
+
     for line in declarations:
         print(line)
