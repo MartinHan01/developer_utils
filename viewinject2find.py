@@ -50,7 +50,7 @@ if __name__ == '__main__':
             type_name = find_type[0]
             if len(type_name) == 0:
                 continue
-            print(find)
+            # print(find)
             finds_res.append('%s = (%s)findViewById(%s);' % (var_name ,type_name ,resid))
             declarations.append(line)
 
