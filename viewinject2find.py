@@ -1,6 +1,10 @@
+
+# -*- coding:utf-8 -*-
+
 import sys
 import io
 import os
+import re
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:
@@ -19,12 +23,26 @@ if __name__ == '__main__':
     else:
         file = open(sys.argv[1])
 
-    prefix = ('public' ,'protected' ,'private')
+    finds_res = []
+    declarations = []
     for line in file:
-        line = line.strip().lstrip()
-        if line.startswith('@ViewInject'):
-            
+        line = line.strip()
+        if(line.startswith('@')):
+            pattern = re.compile(r'\((.+?)\)')
+            find = re.findall(pattern ,line)
+            if find:
+                resid = find[0]
+        else:
+            pattern = re.compile(r'\s(\w+?);')
+            find = re.findall(pattern ,line)
+            if find:
+                var_name = find[len(find) - 1]
+                finds_res.append('%s = findViewById(%s)' % (var_name ,resid))
+                declarations.append(line)
 
-
-
-
+    print()
+    for line in finds_res:
+        print(line)
+    print()
+    for line in declarations:
+        print(line)
