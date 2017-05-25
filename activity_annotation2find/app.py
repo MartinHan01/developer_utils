@@ -21,7 +21,7 @@ if __name__ == '__main__':
                 id_list = []
                 find_list = []
                 previous_isid = False
-                file_fd = open(absolute_path, 'r', -1, encoding='utf-8')
+                file_fd = open(absolute_path, 'r+', -1, encoding='utf-8')
                 for line in file_fd:
                     line = line.strip()
                     if not line:
@@ -31,6 +31,8 @@ if __name__ == '__main__':
                         find = re.findall(pattern, line)
                         if find:
                             id_list.append(find[0])
+                            file_fd.seek(os.SEEK_CUR)
+                            file_fd.writelines('//hello world\n')
                             previous_isid = True
                     elif previous_isid:
                         previous_isid = False
