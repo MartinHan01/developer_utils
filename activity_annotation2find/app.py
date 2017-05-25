@@ -5,7 +5,7 @@
 import os
 import re
 import sys
-
+import io
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:
@@ -22,7 +22,10 @@ if __name__ == '__main__':
                 find_list = []
                 previous_isid = False
                 file_fd = open(absolute_path, 'r+', -1, encoding='utf-8')
-                for line in file_fd:
+                while True:
+                    line = file_fd.readline()
+                    if not line:
+                        break
                     line = line.strip()
                     if not line:
                         continue
@@ -31,8 +34,11 @@ if __name__ == '__main__':
                         find = re.findall(pattern, line)
                         if find:
                             id_list.append(find[0])
-                            file_fd.seek(os.SEEK_CUR)
-                            file_fd.writelines('//hello world\n')
+                            print('当前位置:%s' % file_fd.tell())
+                            file_fd.seek(file_fd.tell(), os.SEEK_SET)
+                            
+                            file_fd.write('\n//hello world\n')
+                            file_fd.flush()
                             previous_isid = True
                     elif previous_isid:
                         previous_isid = False
@@ -58,7 +64,6 @@ if __name__ == '__main__':
                         find_list.append('%s = (%s)findViewById(%s);' \
                             % (var_name, type_name, id_list[len(id_list) - 1]))
                         print(find_list[len(find_list) - 1])
-
                     # print(line)
 
                 file_fd.close()
