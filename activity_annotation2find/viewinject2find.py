@@ -8,59 +8,59 @@ import re
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:
-        lines = []
+        LINES = []
         while True:
             try:
-                line = input()
-                if line:
-                    lines.append(line)
+                LINE = input()
+                if LINE:
+                    LINES.append(LINE)
             except EOFError:
-                lines.append('\n')
+                LINES.append('\n')
                 break
 
-        text = '\n'.join(lines)
-        file = io.StringIO(text)
+        text = '\n'.join(LINES)
+        FILE = io.StringIO(text)
     else:
-        file = open(sys.argv[1])
+        FILE = open(sys.argv[1])
 
-    finds_res = []
+    FIND_RES = []
     declarations = []
-    for line in file:
-        line = line.strip()
-        if(line.startswith('@')):
+    for LINE in FILE:
+        LINE = LINE.strip()
+        if LINE.startswith('@'):
             pattern = re.compile(r'\((.+?)\)')
-            find = re.findall(pattern ,line)
+            find = re.findall(pattern, LINE)
             if find:
                 resid = find[0]
         else:
             var_name = ''
             type_name = ''
             pattern = re.compile(r'\s(\w+?);')
-            find = re.findall(pattern ,line)
+            find = re.findall(pattern, LINE)
             if find:
                 var_name = find[len(find) - 1]
             else:
                 continue
-            if(re.match('^public|private|protected' ,line)):
+            if re.match('^public|private|protected', str(LINE)):
                 type_pattern = re.compile(r'\s(\w+?)\s')
-                find_type = re.findall(type_pattern ,line)
+                find_type = re.findall(type_pattern, LINE)
             else:
                 type_pattern = re.compile(r'(\w+)\s')
-                find_type = re.findall(type_pattern ,line)
+                find_type = re.findall(type_pattern, LINE)
             type_name = find_type[0]
             if len(type_name) == 0:
                 continue
-            # print(find)
-            finds_res.append('%s = (%s)findViewById(%s);' % (var_name ,type_name ,resid))
-            declarations.append(line)
+            print(find)
+            FIND_RES.append('%s = (%s)findViewById(%s);' % (var_name, type_name, resid))
+            declarations.append(LINE)
 
 
     print()
     print('private void initView() {')
-    for line in finds_res:
-        print('    %s' % line)
+    for LINE in FIND_RES:
+        print('    %s' % LINE)
     print('}')
-    print()
+    print('')
 
-    for line in declarations:
-        print(line)
+    for LINE in declarations:
+        print(LINE)
