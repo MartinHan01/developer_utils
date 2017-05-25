@@ -12,19 +12,21 @@ if __name__ == '__main__':
         while True:
             try:
                 LINE = input()
+                if str(LINE) == 'exit':
+                    break
                 if LINE:
                     LINES.append(LINE)
             except EOFError:
                 LINES.append('\n')
                 break
 
-        text = '\n'.join(LINES)
-        FILE = io.StringIO(text)
+        TEXT = '\n'.join(LINES)
+        FILE = io.StringIO(TEXT)
     else:
         FILE = open(sys.argv[1])
 
     FIND_RES = []
-    declarations = []
+    DECLARATIONS = []
     for LINE in FILE:
         LINE = LINE.strip()
         if LINE.startswith('@'):
@@ -50,9 +52,9 @@ if __name__ == '__main__':
             type_name = find_type[0]
             if len(type_name) == 0:
                 continue
-            print(find)
+            # print(find)
             FIND_RES.append('%s = (%s)findViewById(%s);' % (var_name, type_name, resid))
-            declarations.append(LINE)
+            DECLARATIONS.append(LINE)
 
 
     print()
@@ -62,5 +64,5 @@ if __name__ == '__main__':
     print('}')
     print('')
 
-    for LINE in declarations:
+    for LINE in DECLARATIONS:
         print(LINE)
