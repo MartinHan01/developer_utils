@@ -36,7 +36,6 @@ if __name__ == '__main__':
                             id_list.append(find[0])
                             print('当前位置:%s' % file_fd.tell())
                             file_fd.seek(file_fd.tell(), os.SEEK_SET)
-                            
                             file_fd.write('\n//hello world\n')
                             file_fd.flush()
                             previous_isid = True
