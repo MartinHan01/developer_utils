@@ -8,7 +8,7 @@ class ClassData:
     id_list = []
     find_list = []
     content_view = ''
-
+    event_dict = {}
 
     def get_content_view_string(self):
         return str('setContentView(%s);' % self.content_view)
@@ -22,5 +22,13 @@ class ClassData:
 
         return find_list
 
-
+    def get_set_listener_lines(self, key, space):
+        listener_lines = []
+        listener_lines.append(space + 'findViewById(%s).setOnClickListener(new View.OnClickListener() {\n' % key)
+        listener_lines.append(space + '    @Override\n')
+        listener_lines.append(space + '    public void onClick(View v) {\n')
+        listener_lines.append(space + '        %s(v);\n' % self.event_dict[key])
+        listener_lines.append(space + '    }\n')
+        listener_lines.append(space + '});\n')
+        return listener_lines
         

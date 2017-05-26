@@ -17,6 +17,8 @@ def write_new_file(arg_file, arg_line, data):
         return
     elif trip_line.startswith('@ViewInject'):
         return
+    elif trip_line.startswith('@Event'):
+        return 
     elif trip_line.startswith('super.onCreate('):
         arg_file.write(arg_line)
         first_word_index = arg_line.index('s')
@@ -27,6 +29,8 @@ def write_new_file(arg_file, arg_line, data):
         find_list = data.get_find_view_string()
         for line in find_list:
             arg_file.write(space + line + '\n')
+        for key in data.event_dict.keys():
+            arg_file.writelines(data.get_set_listener_lines(key, space))
     else:
         arg_file.write(arg_line)
 
@@ -39,10 +43,13 @@ if __name__ == '__main__':
     for dirpath, dirname, files in os.walk(WORK_DIR):
         for filename in files:
             absolute_path = os.path.join(dirpath, filename)
-            if filename.endswith('ChoosePaywayActivity.java'):
-                new_file = open(os.path.join(dirpath, 'bak_' + filename), 'w')
+            # if filename.endswith('ChoosePaywayActivity.java'):
+            if filename == 'ChoosePaywayActivity.java':
+                new_file = open(os.path.join(dirpath, 'bak_' + filename), 'w', -1, encoding='utf-8')
                 data = ClassData()
                 previous_isid = False
+                previous_is_event = False
+                previous_event_id = ''
                 file_fd = open(absolute_path, 'r+', -1, encoding='utf-8')
                 while True:
                     line = file_fd.readline()
@@ -64,6 +71,13 @@ if __name__ == '__main__':
                         if find:
                             data.id_list.append(find[0])
                             previous_isid = True
+                    elif line.startswith('@Event'):
+                        pattern = re.compile(r'\((.+?)\)')
+                        find = re.findall(pattern, line)
+                        if find:
+                            data.event_dict[find[0]] = ''
+                            previous_event_id = find[0]
+                            previous_is_event = True
                     elif previous_isid:
                         previous_isid = False
                         var_name = ''
@@ -83,11 +97,21 @@ if __name__ == '__main__':
                         data.type_list.append(type_name)
                         data.find_list.append('%s = (%s)findViewById(%s);' \
                             % (var_name, type_name, data.id_list[len(data.id_list) - 1]))
-                        print(data.find_list[len(data.find_list) - 1])
-                    write_new_file(new_file, old_line, data)
+                        # print(data.find_list[len(data.find_list) - 1])
+                    elif previous_is_event:
+                        previous_is_event = False
+                        pattern = re.compile(r'\s(\w+?)\(')
+                        find = re.findall(pattern, line)
+                        if find:
+                            data.event_dict[previous_event_id] = find[0]
+                file_fd.close()
+                file_fd = open(absolute_path, 'r+', -1, encoding='utf-8')
+                for line in file_fd:
+                    write_new_file(new_file, line, data)
                     # print(line)
                 new_file.flush()
                 new_file.close()
                 file_fd.close()
+                
                 print(absolute_path)
 
