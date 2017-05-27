@@ -33,6 +33,7 @@ def write_new_file(arg_file, arg_line, data):
             arg_file.writelines(data.get_set_listener_lines(key, space))
     else:
         arg_file.write(arg_line)
+    arg_file.flush()
 
 
 if __name__ == '__main__':
@@ -43,8 +44,9 @@ if __name__ == '__main__':
     for dirpath, dirname, files in os.walk(WORK_DIR):
         for filename in files:
             absolute_path = os.path.join(dirpath, filename)
-            # if filename.endswith('ChoosePaywayActivity.java'):
-            if filename == 'ChoosePaywayActivity.java':
+            if filename.endswith('Activity.java'):
+            # if filename == 'FeedbackActivity.java' or filename == 'ChoosePaywayActivity.java':
+            # if filename == 'MainActivity.java':
                 new_file = open(os.path.join(dirpath, 'bak_' + filename), 'w', -1, encoding='utf-8')
                 data = ClassData()
                 previous_isid = False
@@ -104,14 +106,16 @@ if __name__ == '__main__':
                         find = re.findall(pattern, line)
                         if find:
                             data.event_dict[previous_event_id] = find[0]
-                file_fd.close()
-                file_fd = open(absolute_path, 'r+', -1, encoding='utf-8')
+                file_fd.seek(0, os.SEEK_SET)
+                new_file.seek(0, os.SEEK_SET)
                 for line in file_fd:
                     write_new_file(new_file, line, data)
                     # print(line)
                 new_file.flush()
                 new_file.close()
                 file_fd.close()
-                
+                os.remove(os.path.join(dirpath, filename))
+                os.rename(os.path.join(dirpath, 'bak_' + filename), os.path.join(dirpath, filename))
+                del data
                 print(absolute_path)
 
