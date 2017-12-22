@@ -44,9 +44,10 @@ if __name__ == '__main__':
     for dirpath, dirname, files in os.walk(WORK_DIR):
         for filename in files:
             absolute_path = os.path.join(dirpath, filename)
-            if filename.endswith('Activity.java'):
+            if filename.endswith('Activity.java') or filename.endswith('Fragment.java') or filename.endswith('Acitivity.java') \
+            or filename.endswith('PayWayView.java'):
             # if filename == 'FeedbackActivity.java' or filename == 'ChoosePaywayActivity.java':
-            # if filename == 'MainActivity.java':
+            # if filename == 'EvaluatePriceActivity.java':
                 new_file = open(os.path.join(dirpath, 'bak_' + filename), 'w', -1, encoding='utf-8')
                 data = ClassData()
                 previous_isid = False

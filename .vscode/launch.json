@@ -76,7 +76,7 @@
             "program": "${file}",
             "cwd": "",
             "args": [
-                "F:\\work\\code\\HSB_public_sdk\\app\\src\\main\\java\\com\\hll"
+                "F:\\work\\code\\HSB_public_sdk\\plugins\\recycle\\src\\main\\java\\com\\hll\\phone_recycle"
             ],
             "console": "integratedTerminal",
             "env": {},
